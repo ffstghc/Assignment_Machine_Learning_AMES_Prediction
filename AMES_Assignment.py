@@ -27,9 +27,7 @@ print("Input dataset # (1) AZ descriptors, (2) ecfi1024, (3) oeselma, (4) wfp")
 ds_ind = int(input()) - 1  # Dataset index
 
 # Perform Gridsearch (yes / no)
-print("Do you want to optimize the parameters with scikit-learn's Gridsearch?", "\n", "!! CAN TAKE VERY LONG (1 h +) !!",
-      "\n",
-      "(1) = no, (2) = yes")
+print("Do you want to optimize the parameters with scikit-learn's Gridsearch?", "\n", "!! CAN TAKE VERY LONG (1 h +) !!", "\n", "(1) = no, (2) = yes")
 gs = int(input())
 
 
@@ -41,7 +39,6 @@ gs = int(input())
 def perform_gridSearch(parameters, classifier):
     grid = GridSearchCV(estimator=classifier, param_grid=parameters, cv=3, n_jobs=-1, verbose=4)
     grid_results = grid.fit(X_train, y_train)
-
     print("Best: {0}, using {1}".format(grid_results.cv_results_['mean_test_score'], grid_results.best_params_))
     results_df = pd.DataFrame(grid_results.cv_results_)
     return results_df
@@ -113,7 +110,6 @@ def import_data(file_names, mode):
 
 # Import full and data without NAs
 dat_train, dat_val, dat_inds_train = import_data(filenames_train, mode='train_val')  # Train / validation data
-
 dat_test, dat_inds_test = import_data(filenames_test, mode='test')  # Test data
 
 # Create Data Lists and make choice dependet on input
