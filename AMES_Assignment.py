@@ -128,11 +128,8 @@ X_test_real = [dat_test[file_input] for file_input in range(0, len(dat_test))][d
 ## STANDARDIZE ##
 #################
 std_sclr = StandardScaler()
-X_train_scaled = X_train
-X_train_scaled = std_sclr.fit_transform(X_train_scaled)
-
-X_test_scaled = X_test
-X_test_scaled = std_sclr.fit_transform(X_test_scaled)
+X_train_scaled = std_sclr.fit_transform(X_train)
+X_test_scaled = std_sclr.fit_transform(X_test)
 
 
 ####################
