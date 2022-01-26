@@ -112,8 +112,7 @@ def import_data(file_names, mode):
 
 
 # Import full and data without NAs
-dat_train, dat_val, dat_inds_train = import_data(filenames_train,
-                                                 mode='train_val')  # Train / validation data
+dat_train, dat_val, dat_inds_train = import_data(filenames_train, mode='train_val')  # Train / validation data
 
 dat_test, dat_inds_test = import_data(filenames_test, mode='test')  # Test data
 
@@ -278,12 +277,12 @@ clf.fit(X_train, y_train)
 
 y_pred = clf.predict(X_test)
 
+accur = create_summary(X_test, y_test, y_pred, 'SUMMARY: RANDOM FOREST', clf)
+
+create_htmp_from_cnf(y_test, y_pred, 'Random Forest', accur)
+
 # Predict for unknown data and export txt
 y_pred_real = clf.predict(X_test_real)
 y_2 = pd.DataFrame(y_pred_real)
 y_2.columns = ["ames"]
 y_2.to_csv('ames_predictions_ecfi1024.txt', header=True, index=False, sep=',')
-
-accur = create_summary(X_test, y_test, y_pred, 'SUMMARY: RANDOM FOREST', clf)
-
-create_htmp_from_cnf(y_test, y_pred, 'Random Forest', accur)
