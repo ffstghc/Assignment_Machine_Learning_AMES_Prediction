@@ -155,8 +155,7 @@ def create_htmp_from_cnf(y_test, y_pred, algo, accur):
     sns.heatmap(pd.DataFrame(cnf_matrix), ax=ax, annot=True, cmap="YlGnBu", fmt='g')
     num_rows, num_cols = X_test.shape
     n_features = num_cols
-    var = ' '.join(
-        [str(algo), "\n", "Accuracy:", str(accur), "Features:", str(n_features)])  # Join Algorithm name and Accuracy
+    var = ' '.join([str(algo), "\n", "Accuracy:", str(accur), "Features:", str(n_features)])  # Join Algorithm name and Accuracy
     ax.set_title(var)  # Set title to joined string
     plt.ylabel('Actual label')
     plt.xlabel('Predicted label')
@@ -191,8 +190,7 @@ create_htmp_from_cnf(y_test, y_pred, 'Support Vector Machine', accur)
 ## K NEAREST NEIGHBORS ##
 #########################
 if gs == 2:  # USE GRIDSEARCH RESULTS
-    gridsearched = perform_gridSearch({'n_neighbors': [1, 10, 50, 100], 'leaf_size': [1, 10, 100]},
-                                      KNeighborsClassifier())
+    gridsearched = perform_gridSearch({'n_neighbors': [1, 10, 50, 100], 'leaf_size': [1, 10, 100]}, KNeighborsClassifier())
     n_eighs = gridsearched[gridsearched['rank_test_score'] == 1].param_n_neighbors.tolist()
     l_size = gridsearched[gridsearched['rank_test_score'] == 1].param_leaf_size.tolist()
     neigh = KNeighborsClassifier(n_neighbors=int(n_eighs[0]), leaf_size=int(l_size[0]))
@@ -211,10 +209,8 @@ create_htmp_from_cnf(y_test, y_pred, 'K Nearest Neighbors', accur)
 ######################
 ## GRADIENT BOOSTED ##
 ######################
-if gs == 2:  # Gridsearch Results
-    gridsearched = perform_gridSearch(
-        {'n_estimators': [1, 10, 100], 'learning_rate': [1, 10], 'max_depth': [0.1, 1, 10]},
-        GradientBoostingClassifier())
+if gs == 2:  # USE GRIDSEARCH RESULTS
+    gridsearched = perform_gridSearch({'n_estimators': [1, 10, 100], 'learning_rate': [1, 10], 'max_depth': [0.1, 1, 10]}, GradientBoostingClassifier())
     n_ests = gridsearched[gridsearched['rank_test_score'] == 1].param_n_estimators.tolist()
     l_rate = gridsearched[gridsearched['rank_test_score'] == 1].param_learning_rate.tolist()
     max_d = gridsearched[gridsearched['rank_test_score'] == 1].param_max_depth.tolist()
@@ -234,15 +230,12 @@ create_htmp_from_cnf(y_test, y_pred, 'Gradient Boosted', accur)
 ######################
 ## NEURONAL NETWORK ##
 ######################
-if gs == 2:  # Gridsearch Results
-    gridsearched = perform_gridSearch(
-        {'hidden_layer_sizes': [10, 100, 500, 1000], 'learning_rate_init': [0.1, 1, 10], 'max_iter': [1, 10, 100, 500]},
-        MLPClassifier())
+if gs == 2:  # USE GRIDSEARCH RESULTS
+    gridsearched = perform_gridSearch({'hidden_layer_sizes': [10, 100, 500, 1000], 'learning_rate_init': [0.1, 1, 10], 'max_iter': [1, 10, 100, 500]}, MLPClassifier())
     n_hdl = gridsearched[gridsearched['rank_test_score'] == 1].param_hidden_layer_sizes.tolist()
     l_rate = gridsearched[gridsearched['rank_test_score'] == 1].param_learning_rate_init.tolist()
     max_iter = gridsearched[gridsearched['rank_test_score'] == 1].param_max_iter.tolist()
-    clf = MLPClassifier(hidden_layer_sizes=n_hdl[0], learning_rate_init=l_rate[0], random_state=1, max_iter=max_iter[0],
-                        early_stopping=True, verbose=5)
+    clf = MLPClassifier(hidden_layer_sizes=n_hdl[0], learning_rate_init=l_rate[0], random_state=1, max_iter=max_iter[0], early_stopping=True, verbose=5)
 else:
     clf = MLPClassifier(hidden_layer_sizes=500, learning_rate_init=0.1, random_state=1, max_iter=300,
                         early_stopping=True, verbose=5)
@@ -260,11 +253,8 @@ create_htmp_from_cnf(y_test, y_pred, 'Neural Network', accur)
 ## RANDOM FOREST ##
 ###################
 if gs == 2:  # USE GRIDSEARCH RESULTS
-    gridsearched = perform_gridSearch(
-        {'max_depth': [1, 10, 100, 200, 500, 1000], 'n_estimators': [1, 10, 100, 500, 1000, 1500]},
-        RandomForestClassifier())
-    max_depth = gridsearched[
-        gridsearched['rank_test_score'] == 1].param_max_depth.tolist()  # Get Gridsearch Results as parameters
+    gridsearched = perform_gridSearch({'max_depth': [1, 10, 100, 200, 500, 1000], 'n_estimators': [1, 10, 100, 500, 1000, 1500]}, RandomForestClassifier())
+    max_depth = gridsearched[gridsearched['rank_test_score'] == 1].param_max_depth.tolist()  # Get Gridsearch Results as parameters
     n_ests = gridsearched[gridsearched['rank_test_score'] == 1].param_n_estimators.tolist()
     clf = RandomForestClassifier(max_depth=int(max_depth[0]), n_estimators=int(n_ests[0]))
 else:
