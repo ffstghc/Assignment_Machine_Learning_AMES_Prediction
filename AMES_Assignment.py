@@ -34,8 +34,6 @@ gs = int(input())
 #################################
 ## HYPERPARAMATER OPTIMIZATION ##
 #################################
-
-
 def perform_gridSearch(parameters, classifier):
     grid = GridSearchCV(estimator=classifier, param_grid=parameters, cv=3, n_jobs=-1, verbose=4)
     grid_results = grid.fit(X_train, y_train)
@@ -60,7 +58,6 @@ filenames_test = ['ames.AZ_descriptors_ts.txt',
 
 
 def import_data(file_names, mode):
-    inds_all = []
 
     imp = SimpleImputer(missing_values=np.nan, strategy='mean')  # Create Imputer
 
@@ -77,10 +74,10 @@ def import_data(file_names, mode):
             data_pre_imputed.append(imported[i])
 
             for j in range(0, len(data_pre_imputed)):
-                X = data_pre_imputed[j].drop(['ID', 'ames', 'set'], axis=1)
-                X = X.astype(float)
+                X = data_pre_imputed[j].drop(['ID', 'ames', 'set'], axis=1).astype(float)
                 y = data_pre_imputed[j]['ames']
-                X = imp.fit_transform(X)
+
+            X = imp.fit_transform(X)
 
             X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.30, random_state=321)
 
@@ -90,27 +87,22 @@ def import_data(file_names, mode):
             data_train_full.append(train)
             data_validation_full.append(val)
 
-        return data_train_full, data_validation_full, inds_all
+        return data_train_full, data_validation_full
 
     else:
 
-        data_test_full = []
-
-        for i in range(0, len(imported)):
-            data_test = imported[i].drop(['ID', 'ames', 'set'], axis=1)
-            data_test = data_test.astype(float)
-
-            data_test_full.append(data_test)
+        data_test_full = [imported[i].drop(['ID', 'ames', 'set'], axis=1).astype(float) for i in range(0, len(imported))]
 
         # Impute missing values
         for i in range(0, len(imported)):
             data_test_full[i] = imp.fit_transform(data_test_full[i])
-        return data_test_full, inds_all
+
+        return data_test_full
 
 
 # Import full and data without NAs
-dat_train, dat_val, dat_inds_train = import_data(filenames_train, mode='train_val')  # Train / validation data
-dat_test, dat_inds_test = import_data(filenames_test, mode='test')  # Test data
+dat_train, dat_val = import_data(filenames_train, mode='train_val')  # Train / validation data
+dat_test = import_data(filenames_test, mode='test')  # Test data
 
 # Create Data Lists and make choice dependet on input
 X_train = [dat_train[file_input][0] for file_input in range(0, len(dat_train))][ds_ind]  # Training data
@@ -146,7 +138,7 @@ def create_summary(x_test_val, y_test_val, y_pred_val, input_type, model):
 ## HEATMAP FROM CONFUSION MATRIX
 def create_htmp_from_cnf(y_test, y_pred, algo, accur):
     cnf_matrix = confusion_matrix(y_test, y_pred)
-    class_names = ["AMES-", "AMES+"]  # name  of classes
+    class_names = ["AMES-", "AMES+"]  # Names  of classes
     ax = plt.axes()
     sns.heatmap(pd.DataFrame(cnf_matrix), ax=ax, annot=True, cmap="YlGnBu", fmt='g')
     num_rows, num_cols = X_test.shape
